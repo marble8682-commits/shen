@@ -12,7 +12,7 @@ export interface Product {
 export const PRODUCTS: Product[] = [
   {
     id: 'yufutong',
-    name: '御富通 (Yu Fu Tong)',
+    name: '御富通 (Eefooton)',
     tagline: '暢通無阻，守護心脈的黃金配方',
     description: '御富通是一款專為現代人設計的心血管健康補充品。結合傳統智慧與現代生技，精選多種天然萃取物，旨在促進血液循環，維持血管彈性，是您日常健康管理的最佳夥伴。',
     benefits: [
