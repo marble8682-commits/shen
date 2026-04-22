@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 import { Heart, Menu, X, Phone, Mail, MapPin } from "lucide-react";
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, ChangeEvent } from "react";
 import { PRODUCTS, Product } from "./data";
 
 export default function App() {
@@ -442,15 +442,41 @@ function AboutPage() {
 }
 
 function ContactModal({ onClose }: { onClose: () => void }) {
-  const [status, setStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    message: ''
+  });
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setStatus('submitting');
-    // Simulate API call to send email to marblee@me.com
-    setTimeout(() => {
+    
+    try {
+      // Send data to Google Apps Script
+      const response = await fetch('https://script.google.com/macros/s/AKfycbwyWqjrQEq0wDOVGJHggSoh4HY7uru9stEGqObe2uuLEeZXfmSM4aKXLGZijYveAPfUAA/exec', {
+        method: 'POST',
+        mode: 'no-cors', // Common for Google Apps Script to avoid CORS issues if not handled on server
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      });
+      
+      // Since mode is 'no-cors', we won't be able to read the response status
+      // We assume success if it doesn't throw
       setStatus('success');
-    }, 1500);
+    } catch (error) {
+      console.error('Submission error:', error);
+      setStatus('error');
+    }
+  };
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   return (
@@ -487,8 +513,8 @@ function ContactModal({ onClose }: { onClose: () => void }) {
             </div>
             <h3 className="text-3xl font-extrabold text-slate-900 mb-4">預約成功！</h3>
             <p className="text-slate-500 leading-relaxed">
-              您的留言已發送至 <span className="text-sky-600 font-bold">marblee@me.com</span>。<br />
-              專業顧問將於 24 小時內與您聯繫。
+              您的留言已成功送出。<br />
+              專業顧問將會盡快與您聯繫。
             </p>
             <button 
               onClick={onClose}
@@ -503,23 +529,60 @@ function ContactModal({ onClose }: { onClose: () => void }) {
             <p className="text-slate-500 mb-8 font-medium">請留下您的聯絡資訊與需求，我們將由專人為您服務。</p>
             
             <form onSubmit={handleSubmit} className="space-y-5">
+              {status === 'error' && (
+                <div className="p-4 bg-red-50 text-red-600 rounded-xl text-sm font-bold animate-pulse">
+                  送出失敗，請檢查網路連線或稍後再試。
+                </div>
+              )}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
                   <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 ml-1">您的姓名</label>
-                  <input required type="text" className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3.5 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none transition-all" placeholder="例如：王小明" />
+                  <input 
+                    name="name"
+                    required 
+                    type="text" 
+                    value={formData.name}
+                    onChange={handleChange}
+                    className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3.5 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none transition-all" 
+                    placeholder="例如：王小明" 
+                  />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 ml-1">聯繫電話</label>
-                  <input required type="tel" className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3.5 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none transition-all" placeholder="09XX-XXX-XXX" />
+                  <input 
+                    name="phone"
+                    required 
+                    type="tel" 
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3.5 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none transition-all" 
+                    placeholder="09XX-XXX-XXX" 
+                  />
                 </div>
               </div>
               <div>
                 <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 ml-1">電子信箱</label>
-                <input required type="email" className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3.5 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none transition-all" placeholder="example@email.com" />
+                <input 
+                  name="email"
+                  required 
+                  type="email" 
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3.5 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none transition-all" 
+                  placeholder="example@email.com" 
+                />
               </div>
               <div>
                 <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 ml-1">諮詢留言</label>
-                <textarea required rows={4} className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3.5 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none transition-all resize-none" placeholder="請簡述您的健康考量或產品相關問題..." />
+                <textarea 
+                  name="message"
+                  required 
+                  rows={4} 
+                  value={formData.message}
+                  onChange={handleChange}
+                  className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3.5 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none transition-all resize-none" 
+                  placeholder="請簡述您的健康考量或產品相關問題..." 
+                />
               </div>
               <button 
                 disabled={status === 'submitting'}
