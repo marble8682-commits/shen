@@ -13,8 +13,8 @@ export const PRODUCTS: Product[] = [
   {
     id: 'yufutong',
     name: '御富通 (Eefooton)',
-    tagline: '暢通無阻，守護心脈的黃金配方',
-    description: '御富通是一款專為現代人設計的心血管健康補充品。結合傳統智慧與現代生技，精選多種天然萃取物，旨在促進血液循環，維持血管彈性，是您日常健康管理的最佳夥伴。',
+    tagline: '',
+    description: '御富通為多種天然中藥萃取，用於調節生理機能，並已取得已取得UKAS ISO 22000及HACCP雙重認證。',
     benefits: [
       '促進循環：有助於維持穩定的血液流動。',
       '維持彈性：強化血管壁的韌性。',
@@ -32,7 +32,7 @@ export const PRODUCTS: Product[] = [
     id: 'yuanhuayi',
     name: '元化益 (Yuan Hua Yi)',
     tagline: '平衡代謝，重塑體內純淨環境',
-    description: '元化益專注於優化身體的代謝效能。透過專利酵素配方與複合營養素，協助調節生理機能，加速體內廢物排出，讓您由內而外煥發健康光采。',
+    description: '元化益為天然中藥萃取而成，已取得UKAS ISO 22000及HACCP雙重認證。',
     benefits: [
       '代謝平衡：支持健康的血糖與脂質代謝。',
       '淨化排毒：協助體內循環淨化。',

@@ -1,17 +1,23 @@
 import { motion } from "motion/react";
-import { Heart, Activity, Dna, Menu, X, Phone, Mail, MapPin } from "lucide-react";
-import { useState } from "react";
+import { Heart, Menu, X, Phone, Mail, MapPin } from "lucide-react";
+import { useState, FormEvent } from "react";
 import { PRODUCTS, Product } from "./data";
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<"home" | "products" | "about">("home");
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
 
   const navigateToProduct = (product: Product) => {
     setSelectedProduct(product);
     setActiveTab("products");
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const openContact = () => {
+    setIsContactModalOpen(true);
+    setIsMenuOpen(false);
   };
 
   return (
@@ -24,7 +30,7 @@ export default function App() {
               <div className="w-10 h-10 bg-sky-600 rounded-lg flex items-center justify-center">
                 <Heart className="text-white w-6 h-6" />
               </div>
-              <span className="text-2xl font-bold tracking-tight text-sky-900">勝心康 <span className="font-light text-slate-400 text-lg ml-1">SHENG XIN KANG</span></span>
+              <span className="text-2xl font-bold tracking-tight text-sky-900">勝心康 <span className="font-light text-slate-400 text-lg ml-1">SHENG SHIN KANG</span></span>
             </div>
 
             {/* Desktop Menu */}
@@ -59,7 +65,10 @@ export default function App() {
               >
                 關於我們
               </button>
-              <button className="bg-sky-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-sky-700 transition-all shadow-lg shadow-sky-600/20">
+              <button 
+                onClick={openContact}
+                className="bg-sky-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-sky-700 transition-all shadow-lg shadow-sky-600/20"
+              >
                 立即諮詢
               </button>
             </div>
@@ -89,18 +98,26 @@ export default function App() {
                 ))}
               </div>
               <button onClick={() => { setActiveTab("about"); setIsMenuOpen(false); }} className="text-left py-2 font-medium text-slate-900">關於我們</button>
-              <button className="bg-sky-600 text-white py-3 rounded-xl font-bold mt-2 shadow-lg shadow-sky-600/20">立即諮詢</button>
+              <button 
+                onClick={openContact}
+                className="bg-sky-600 text-white py-3 rounded-xl font-bold mt-2 shadow-lg shadow-sky-600/20"
+              >
+                立即諮詢
+              </button>
             </div>
           </motion.div>
         )}
       </nav>
 
       <main className="pt-20">
-        {activeTab === "home" && <HomePage onSelectProduct={navigateToProduct} />}
-        {activeTab === "products" && selectedProduct && <ProductDetailPage product={selectedProduct} />}
+        {activeTab === "home" && <HomePage onSelectProduct={navigateToProduct} onOpenContact={openContact} />}
+        {activeTab === "products" && selectedProduct && <ProductDetailPage product={selectedProduct} onOpenContact={openContact} />}
         {activeTab === "products" && !selectedProduct && <AllProductsPage onSelectProduct={navigateToProduct} />}
         {activeTab === "about" && <AboutPage />}
       </main>
+
+      {/* Contact Modal */}
+      {isContactModalOpen && <ContactModal onClose={() => setIsContactModalOpen(false)} />}
 
       {/* Footer */}
       <footer className="bg-white border-t border-slate-100 py-16">
@@ -139,13 +156,13 @@ export default function App() {
                 </li>
                 <li className="flex items-center gap-3">
                   <Mail className="w-4 h-4 shrink-0 text-sky-600" />
-                  <span>service@shxkang.com.tw</span>
+                  <span>marblee@me.com</span>
                 </li>
               </ul>
             </div>
           </div>
           <div className="pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-slate-400 text-xs font-bold">
-            <span>© 2026 勝心康 (Sheng Xin Kang) Healthcare.</span>
+            <span>© 2026 勝心康 (Sheng Shin Kang) Healthcare.</span>
             <div className="flex gap-6">
                 <span>隱私權政策</span>
                 <span>使用條款</span>
@@ -157,7 +174,7 @@ export default function App() {
   );
 }
 
-function HomePage({ onSelectProduct }: { onSelectProduct: (p: Product) => void }) {
+function HomePage({ onSelectProduct, onOpenContact }: { onSelectProduct: (p: Product) => void, onOpenContact: () => void }) {
   return (
     <div>
       {/* Hero Section */}
@@ -196,7 +213,10 @@ function HomePage({ onSelectProduct }: { onSelectProduct: (p: Product) => void }
               >
                 探索產品
               </button>
-              <button className="border border-slate-200 text-slate-600 px-8 py-4 rounded-xl font-bold hover:bg-slate-50 transition-all bg-white">
+              <button 
+                onClick={onOpenContact}
+                className="border border-slate-200 text-slate-600 px-8 py-4 rounded-xl font-bold hover:bg-slate-50 transition-all bg-white"
+              >
                 預約諮詢
               </button>
             </div>
@@ -297,7 +317,7 @@ function HomePage({ onSelectProduct }: { onSelectProduct: (p: Product) => void }
   );
 }
 
-function ProductDetailPage({ product }: { product: Product }) {
+function ProductDetailPage({ product, onOpenContact }: { product: Product, onOpenContact: () => void }) {
   return (
     <motion.div 
       initial={{ opacity: 0 }}
@@ -311,65 +331,31 @@ function ProductDetailPage({ product }: { product: Product }) {
           <div className="text-center px-4">
             <span className="text-white/70 text-sm font-bold tracking-[0.3em] uppercase mb-4 block">詳盡解說 · 專業守護</span>
             <h1 className="text-5xl md:text-7xl font-bold text-white mb-4">{product.name}</h1>
-            <p className="text-white/90 text-xl font-light">{product.tagline}</p>
+            {product.tagline && <p className="text-white/90 text-xl font-light">{product.tagline}</p>}
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-24">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
-          <div>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-24">
+        <div className="space-y-16">
+          <div className="text-center">
             <h2 className="text-slate-400 text-xs font-bold uppercase tracking-[0.3em] mb-8">產品概覽</h2>
-            <p className="text-3xl text-slate-900 font-extrabold leading-tight mb-12">
+            <p className="text-3xl md:text-4xl text-slate-900 font-extrabold leading-tight">
               {product.description}
             </p>
-            
-            <div className="space-y-12">
-              <div>
-                <h3 className="text-lg font-bold text-sky-600 mb-6 flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center">
-                    <Activity className="w-4 h-4" />
-                  </div>
-                  核心優點
-                </h3>
-                <ul className="space-y-6">
-                  {product.benefits.map((b, i) => (
-                    <li key={i} className="flex items-start gap-4 p-6 bg-white rounded-2xl border border-slate-100 shadow-sm">
-                      <div className="w-1.5 h-1.5 rounded-full bg-sky-500 mt-2.5 shrink-0" />
-                      <span className="text-slate-600 leading-relaxed">{b}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
           </div>
 
-          <div className="lg:border-l lg:pl-20 border-slate-100">
-            <div className="mb-12">
-              <h3 className="text-lg font-bold text-sky-600 mb-8 flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center">
-                  <Dna className="w-4 h-4" />
-                </div>
-                精選技術特色
-              </h3>
-              <div className="grid grid-cols-1 gap-4">
-                {product.features.map((f, i) => (
-                  <div key={i} className="flex items-center gap-4 p-6 bg-slate-50 rounded-2xl text-slate-800 font-bold border border-slate-100">
-                    <div className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-sm font-extrabold text-sky-600">
-                      0{i+1}
-                    </div>
-                    {f}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="bg-slate-900 text-white p-12 rounded-[2.5rem] shadow-2xl">
-              <h4 className="text-2xl font-bold mb-6">對此服務感興趣？</h4>
-              <p className="text-slate-400 mb-10 leading-relaxed">
+          <div className="bg-slate-900 text-white p-12 md:p-16 rounded-[3rem] shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-sky-500/10 rounded-full -mr-32 -mt-32 blur-3xl" />
+            <div className="relative z-10 max-w-2xl mx-auto text-center">
+              <h4 className="text-3xl font-bold mb-6">對此服務感興趣？</h4>
+              <p className="text-slate-400 mb-10 text-lg leading-relaxed">
                 每位客戶的健康狀況不盡相同，我們的專業團隊隨時待命，為您提供最適合的建議。
               </p>
-              <button className="w-full bg-sky-500 text-white font-bold py-5 rounded-xl hover:bg-sky-600 transition-all shadow-xl shadow-sky-500/20">
+              <button 
+                onClick={onOpenContact}
+                className="w-full md:w-auto px-12 bg-sky-500 text-white font-bold py-5 rounded-xl hover:bg-sky-600 transition-all shadow-xl shadow-sky-500/20"
+              >
                 立即預約諮詢
               </button>
             </div>
@@ -398,7 +384,7 @@ function AllProductsPage({ onSelectProduct }: { onSelectProduct: (p: Product) =>
                <img src={p.image} alt={p.name} className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700" referrerPolicy="no-referrer" />
              </div>
              <h3 className="text-2xl font-bold text-slate-900 mb-2">{p.name}</h3>
-             <p className="text-sky-600 text-sm font-bold mb-4">{p.tagline}</p>
+             {p.tagline && <p className="text-sky-600 text-sm font-bold mb-4">{p.tagline}</p>}
              <p className="text-slate-500 text-sm mb-6 line-clamp-3 leading-relaxed">{productDescriptionsShort[p.id] || p.description}</p>
              <button className="text-sky-600 font-bold flex items-center gap-2 group-hover:translate-x-1 transition-transform">
                查看詳細說明 <span>→</span>
@@ -451,6 +437,109 @@ function AboutPage() {
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function ContactModal({ onClose }: { onClose: () => void }) {
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    setStatus('submitting');
+    // Simulate API call to send email to marblee@me.com
+    setTimeout(() => {
+      setStatus('success');
+    }, 1500);
+  };
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={onClose}
+        className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+      />
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        className="relative bg-white w-full max-w-xl rounded-[2.5rem] shadow-2xl overflow-hidden"
+      >
+        <button 
+          onClick={onClose}
+          className="absolute top-6 right-6 w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:text-slate-900 transition-colors z-10"
+        >
+          <X className="w-5 h-5" />
+        </button>
+
+        {status === 'success' ? (
+          <div className="p-16 text-center">
+            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-8">
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                className="text-green-600"
+              >
+                 <Heart className="w-10 h-10 fill-current" />
+              </motion.div>
+            </div>
+            <h3 className="text-3xl font-extrabold text-slate-900 mb-4">預約成功！</h3>
+            <p className="text-slate-500 leading-relaxed">
+              您的留言已發送至 <span className="text-sky-600 font-bold">marblee@me.com</span>。<br />
+              專業顧問將於 24 小時內與您聯繫。
+            </p>
+            <button 
+              onClick={onClose}
+              className="mt-10 bg-slate-900 text-white px-8 py-3 rounded-xl font-bold"
+            >
+              關閉視窗
+            </button>
+          </div>
+        ) : (
+          <div className="p-10 md:p-12">
+            <h3 className="text-3xl font-extrabold text-slate-900 mb-2">預約專業諮詢</h3>
+            <p className="text-slate-500 mb-8 font-medium">請留下您的聯絡資訊與需求，我們將由專人為您服務。</p>
+            
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                  <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 ml-1">您的姓名</label>
+                  <input required type="text" className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3.5 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none transition-all" placeholder="例如：王小明" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 ml-1">聯繫電話</label>
+                  <input required type="tel" className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3.5 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none transition-all" placeholder="09XX-XXX-XXX" />
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 ml-1">電子信箱</label>
+                <input required type="email" className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3.5 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none transition-all" placeholder="example@email.com" />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 ml-1">諮詢留言</label>
+                <textarea required rows={4} className="w-full bg-slate-50 border border-slate-100 rounded-xl px-4 py-3.5 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none transition-all resize-none" placeholder="請簡述您的健康考量或產品相關問題..." />
+              </div>
+              <button 
+                disabled={status === 'submitting'}
+                className="w-full bg-sky-600 text-white font-bold py-4 rounded-xl shadow-xl shadow-sky-600/30 hover:bg-sky-700 active:scale-95 transition-all disabled:opacity-50 mt-4 flex items-center justify-center gap-3"
+              >
+                {status === 'submitting' ? (
+                  <>
+                    <motion.div 
+                      animate={{ rotate: 360 }}
+                      transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
+                      className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full"
+                    />
+                    傳送中...
+                  </>
+                ) : '確認送出預約'}
+              </button>
+            </form>
+          </div>
+        )}
+      </motion.div>
     </div>
   );
 }
