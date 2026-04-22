@@ -455,18 +455,23 @@ function ContactModal({ onClose }: { onClose: () => void }) {
     setStatus('submitting');
     
     try {
+      // Create form data for Google Apps Script
+      const params = new URLSearchParams();
+      params.append('name', formData.name);
+      params.append('phone', formData.phone);
+      params.append('email', formData.email);
+      params.append('message', formData.message);
+
       // Send data to Google Apps Script
-      const response = await fetch('https://script.google.com/macros/s/AKfycbwyWqjrQEq0wDOVGJHggSoh4HY7uru9stEGqObe2uuLEeZXfmSM4aKXLGZijYveAPfUAA/exec', {
+      await fetch('https://script.google.com/macros/s/AKfycbwyWqjrQEq0wDOVGJHggSoh4HY7uru9stEGqObe2uuLEeZXfmSM4aKXLGZijYveAPfUAA/exec', {
         method: 'POST',
-        mode: 'no-cors', // Common for Google Apps Script to avoid CORS issues if not handled on server
+        mode: 'no-cors',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: JSON.stringify(formData)
+        body: params.toString()
       });
       
-      // Since mode is 'no-cors', we won't be able to read the response status
-      // We assume success if it doesn't throw
       setStatus('success');
     } catch (error) {
       console.error('Submission error:', error);
