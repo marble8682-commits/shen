@@ -149,11 +149,11 @@ export default function App() {
               <ul className="space-y-4 text-slate-500 text-sm font-medium">
                 <li className="flex items-start gap-3">
                   <MapPin className="w-4 h-4 shrink-0 mt-0.5 text-sky-600" />
-                  <span>台北市信義區忠孝東路五段 1 號</span>
+                  <span>台中市北屯區興安路２段449號12樓</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <Phone className="w-4 h-4 shrink-0 text-sky-600" />
-                  <span>0800-123-456</span>
+                  <span>04-22428103</span>
                 </li>
                 <li className="flex items-center gap-3">
                   <Mail className="w-4 h-4 shrink-0 text-sky-600" />
