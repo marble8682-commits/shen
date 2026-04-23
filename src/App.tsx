@@ -468,10 +468,8 @@ function ContactModal({ onClose }: { onClose: () => void }) {
         formRef.current
       );
       
-      alert('成功');
       setFormData({ from_name: '', reply_to: '', message: '' });
       setStatus('success');
-      onClose();
     } catch (error) {
       console.error('Submission error:', error);
       setStatus('error');
@@ -505,74 +503,99 @@ function ContactModal({ onClose }: { onClose: () => void }) {
           <X className="w-5 h-5" />
         </button>
 
-        <div className="p-10 md:p-12">
-          <h3 className="text-3xl font-extrabold text-slate-900 mb-2">預約專業諮詢</h3>
-          <p className="text-slate-500 mb-8 font-medium">請留下您的聯絡資訊與需求，我們將由專人為您服務。</p>
-          
-          <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
-            {status === 'error' && (
-              <div className="p-4 bg-red-50 text-red-600 rounded-xl text-sm font-bold animate-pulse">
-                送出失敗，請檢查網路連線或稍後再試。
-              </div>
-            )}
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <div>
-                <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 ml-1">您的姓名</label>
-                <input 
-                  name="from_name"
-                  required 
-                  type="text" 
-                  value={formData.from_name}
-                  onChange={handleChange}
-                  className="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-4 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none transition-all" 
-                  placeholder="請輸入姓名" 
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 ml-1">電子信箱</label>
-                <input 
-                  name="reply_to"
-                  required 
-                  type="email" 
-                  value={formData.reply_to}
-                  onChange={handleChange}
-                  className="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-4 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none transition-all" 
-                  placeholder="example@email.com" 
-                />
-              </div>
+        {status === 'success' ? (
+          <div className="p-16 text-center">
+            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-8">
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                className="text-green-600"
+              >
+                 <Heart className="w-10 h-10 fill-current" />
+              </motion.div>
             </div>
-
-            <div>
-              <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 ml-1">留言內容</label>
-              <textarea 
-                name="message"
-                required 
-                rows={4} 
-                value={formData.message}
-                onChange={handleChange}
-                className="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-4 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none transition-all resize-none text-slate-700" 
-                placeholder="請輸入留言內容..." 
-              />
-            </div>
-
+            <h3 className="text-3xl font-extrabold text-slate-900 mb-4">發送成功！</h3>
+            <p className="text-slate-500 leading-relaxed font-medium">
+              您的留言已成功送出。<br />
+              專業顧問將會盡快與您聯繫。
+            </p>
             <button 
-              disabled={status === 'submitting'}
-              className="w-full bg-slate-900 text-white font-bold py-5 rounded-2xl shadow-xl shadow-slate-200 hover:bg-slate-800 active:scale-[0.98] transition-all disabled:opacity-50 mt-4 flex items-center justify-center gap-3"
+              onClick={onClose}
+              className="mt-10 bg-slate-900 text-white px-12 py-4 rounded-2xl font-bold hover:bg-slate-800 transition-all shadow-xl shadow-slate-200"
             >
-              {status === 'submitting' ? (
-                <>
-                  <motion.div 
-                    animate={{ rotate: 360 }}
-                    transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
-                    className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full"
-                  />
-                  傳送中...
-                </>
-              ) : '確認送出'}
+              返回
             </button>
-          </form>
-        </div>
+          </div>
+        ) : (
+          <div className="p-10 md:p-12">
+            <h3 className="text-3xl font-extrabold text-slate-900 mb-2">預約專業諮詢</h3>
+            <p className="text-slate-500 mb-8 font-medium">請留下您的聯絡資訊與需求，我們將由專人為您服務。</p>
+            
+            <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
+              {status === 'error' && (
+                <div className="p-4 bg-red-50 text-red-600 rounded-xl text-sm font-bold animate-pulse">
+                  送出失敗，請檢查網路連線或稍後再試。
+                </div>
+              )}
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                  <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 ml-1">您的姓名</label>
+                  <input 
+                    name="from_name"
+                    required 
+                    type="text" 
+                    value={formData.from_name}
+                    onChange={handleChange}
+                    className="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-4 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none transition-all" 
+                    placeholder="請輸入姓名" 
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 ml-1">電子信箱</label>
+                  <input 
+                    name="reply_to"
+                    required 
+                    type="email" 
+                    value={formData.reply_to}
+                    onChange={handleChange}
+                    className="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-4 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none transition-all" 
+                    placeholder="example@email.com" 
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 ml-1">留言內容</label>
+                <textarea 
+                  name="message"
+                  required 
+                  rows={4} 
+                  value={formData.message}
+                  onChange={handleChange}
+                  className="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-4 focus:bg-white focus:ring-2 focus:ring-sky-500 outline-none transition-all resize-none text-slate-700" 
+                  placeholder="請輸入留言內容..." 
+                />
+              </div>
+
+              <button 
+                disabled={status === 'submitting'}
+                className="w-full bg-slate-900 text-white font-bold py-5 rounded-2xl shadow-xl shadow-slate-200 hover:bg-slate-800 active:scale-[0.98] transition-all disabled:opacity-50 mt-4 flex items-center justify-center gap-3"
+              >
+                {status === 'submitting' ? (
+                  <>
+                    <motion.div 
+                      animate={{ rotate: 360 }}
+                      transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
+                      className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full"
+                    />
+                    傳送中...
+                  </>
+                ) : '確認送出'}
+              </button>
+            </form>
+          </div>
+        )}
       </motion.div>
     </div>
   );
