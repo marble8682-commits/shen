@@ -50,7 +50,7 @@ export const PRODUCTS: Product[] = [
     id: 'genetesting',
     name: '基因檢測 (Gene Testing)',
     tagline: '預見未來，量身打造的精準醫療',
-    description: '揭開生命的黑盒子。勝心康的基因檢測服務提供全方位的遺傳風險評估，從癌症預防、慢性病風險到潛能分析，為您的健康路徑提供科學導航。',
+    description: '勝心康經銷的乳癌基因檢測EndoPredict，為美國Myriad的產品，經國際學會(ASCO、NCCN、ESMO、St.Gallen、NICE...)推薦認可，可提供最完善的乳癌初期治療方針建議。目前的產品中唯一能評估15年後復發機率。',
     benefits: [
       '預防醫學：及早發現潛在遺傳風險。',
       '精準營養：根據基因提供個人化飲食建議。',
@@ -63,5 +63,23 @@ export const PRODUCTS: Product[] = [
     ],
     image: 'https://picsum.photos/seed/dna/800/600',
     category: '精準醫療'
+  },
+  {
+    id: 'laser',
+    name: '配戴式靜脈雷射 (OLIB)',
+    tagline: '光能淨血，重啟細胞自癒與活力',
+    description: '引進低能量紅色雷射光能照射，如同體內的光波SPA。透過靜脈導入，活化红血球攜氧力、清除大分子自由基、加速血液微循環與全身光波調節。',
+    benefits: [
+      '含氧提升：顯著促進紅血球帶氧量，改善末梢循環與手腳冰冷。',
+      '活化線粒體：活化細胞的發電廠，重現深層青春活力。',
+      '深層淨化：加速排出體內代謝廢物與乳酸，減輕身體慢性發炎。'
+    ],
+    features: [
+      '先進非侵入低能量生醫光物理技術',
+      '深度抗衰與自癒修復力啟動',
+      '安心舒適，全面提升身體免疫調節'
+    ],
+    image: 'https://picsum.photos/seed/laser/800/600',
+    category: '光能保養'
   }
 ];

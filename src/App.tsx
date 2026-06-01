@@ -3,6 +3,7 @@ import { Heart, Menu, X, Phone, Mail, MapPin } from "lucide-react";
 import { useState, FormEvent, ChangeEvent, useRef, useEffect } from "react";
 import { PRODUCTS, Product } from "./data";
 import emailjs from '@emailjs/browser';
+import { ShengXinKangLogo } from "./components/ShengXinKangLogo";
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<"home" | "products" | "about">("home");
@@ -27,10 +28,8 @@ export default function App() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between h-20 items-center">
-            <div className="flex items-center gap-2 cursor-pointer" onClick={() => { setActiveTab("home"); setSelectedProduct(null); }}>
-              <div className="w-10 h-10 bg-sky-600 rounded-lg flex items-center justify-center">
-                <Heart className="text-white w-6 h-6" />
-              </div>
+            <div className="flex items-center gap-3 cursor-pointer" onClick={() => { setActiveTab("home"); setSelectedProduct(null); }}>
+              <ShengXinKangLogo className="w-12 h-12 flex-shrink-0" />
               <span className="text-2xl font-bold tracking-tight text-sky-900">勝心康 <span className="font-light text-slate-400 text-lg ml-1">SHENG SHIN KANG</span></span>
             </div>
 
@@ -125,14 +124,12 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12 border-b border-slate-100 pb-12">
             <div className="col-span-1 md:col-span-2">
-              <div className="flex items-center gap-2 mb-6">
-                <div className="w-8 h-8 bg-sky-600 rounded-lg flex items-center justify-center">
-                  <Heart className="text-white w-5 h-5" />
-                </div>
+              <div className="flex items-center gap-3 mb-6">
+                <ShengXinKangLogo className="w-10 h-10 flex-shrink-0" />
                 <span className="text-2xl font-bold tracking-tight text-sky-900">勝心康</span>
               </div>
               <p className="text-slate-500 max-w-sm leading-relaxed">
-                專注於頂尖生物技術與精準健康管理，致力於為每一位客戶提供量身定制的醫療保健方案。您的健康，是我們最珍視的承諾。
+                專注於尖端醫療科技與精準的基因檢測產品。您的健康，是我們最珍視的承諾。
               </p>
             </div>
             <div>
@@ -202,7 +199,7 @@ function HomePage({ onSelectProduct, onOpenContact }: { onSelectProduct: (p: Pro
             </span>
             <h1 className="text-6xl md:text-7xl font-extrabold text-slate-900 leading-[1.1] mb-8">
               用科學守護 <br />
-              <span className="text-sky-600">每一份心跳</span>
+              <span className="text-sky-600">您的健康</span>
             </h1>
             <p className="text-xl text-slate-500 mb-10 leading-relaxed max-w-lg">
               勝心康專注於預防醫學與精準檢測，為您量身打造專屬的健康防護體系。
@@ -229,14 +226,12 @@ function HomePage({ onSelectProduct, onOpenContact }: { onSelectProduct: (p: Pro
       <section id="products" className="py-32 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-20">
-            <h2 className="text-4xl font-extrabold text-slate-900 mb-4">核心醫療保健方案</h2>
+            <h2 className="text-4xl font-extrabold text-slate-900 mb-4">核心醫療保健產品</h2>
             <div className="w-20 h-1.5 bg-sky-600 mx-auto rounded-full mb-6 shadow-sm" />
-            <p className="text-slate-500 max-w-2xl mx-auto text-lg font-light leading-relaxed">
-              我們深知每份體質的獨特性，因此開發出針對不同健康需求的專業產品，從基礎代謝到遺傳分析一應俱全。
-            </p>
+
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
             {PRODUCTS.map((p, idx) => (
               <motion.div 
                 key={p.id}
@@ -248,7 +243,9 @@ function HomePage({ onSelectProduct, onOpenContact }: { onSelectProduct: (p: Pro
                 className={`group cursor-pointer bg-white rounded-[2rem] overflow-hidden border border-slate-100 shadow-sm transition-all duration-500 ${
                   p.id === 'yufutong' ? 'hover:border-sky-200 bg-gradient-to-b from-white to-sky-50/30' :
                   p.id === 'yuanhuayi' ? 'hover:border-emerald-200 bg-gradient-to-b from-white to-emerald-50/30' :
-                  'hover:border-slate-400 bg-slate-900 text-white shadow-xl'
+                  p.id === 'laser' ? 'hover:border-rose-200 bg-gradient-to-b from-white to-rose-50/30' :
+                  p.id === 'genetesting' ? 'hover:border-indigo-200 bg-gradient-to-b from-white to-indigo-50/30' :
+                  'hover:border-slate-200'
                 }`}
               >
                 <div className="aspect-[4/3] relative overflow-hidden">
@@ -263,11 +260,23 @@ function HomePage({ onSelectProduct, onOpenContact }: { onSelectProduct: (p: Pro
                   </div>
                 </div>
                 <div className="p-10">
-                  <h3 className={`text-2xl font-bold mb-3 transition-colors ${p.id === 'genetesting' ? 'text-white' : 'text-slate-900 group-hover:text-sky-600'}`}>{p.name}</h3>
-                  <p className={`text-sm mb-8 line-clamp-3 leading-relaxed ${p.id === 'genetesting' ? 'text-slate-400' : 'text-slate-500'}`}>
+                  <h3 className={`text-2xl font-bold mb-3 transition-colors text-slate-900 ${
+                    p.id === 'yufutong' ? 'group-hover:text-sky-600' :
+                    p.id === 'yuanhuayi' ? 'group-hover:text-emerald-600' :
+                    p.id === 'laser' ? 'group-hover:text-rose-600' :
+                    'group-hover:text-indigo-600'
+                  }`}>
+                    {p.name}
+                  </h3>
+                  <p className="text-sm mb-8 line-clamp-3 leading-relaxed text-slate-500">
                     {p.description}
                   </p>
-                  <div className={`flex items-center gap-2 font-bold text-sm ${p.id === 'genetesting' ? 'text-sky-400' : 'text-sky-600'}`}>
+                  <div className={`flex items-center gap-2 font-bold text-sm ${
+                    p.id === 'yufutong' ? 'text-sky-600' :
+                    p.id === 'yuanhuayi' ? 'text-emerald-600' :
+                    p.id === 'laser' ? 'text-rose-600' :
+                    'text-indigo-600'
+                  }`}>
                     了解內容詳情 
                     <motion.span animate={{ x: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 1.5 }}>→</motion.span>
                   </div>
@@ -278,42 +287,7 @@ function HomePage({ onSelectProduct, onOpenContact }: { onSelectProduct: (p: Pro
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-24 bg-slate-900 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
-            <div>
-              <div className="text-5xl font-extrabold mb-2 text-sky-500">15+</div>
-              <div className="text-slate-400 text-xs tracking-widest uppercase font-bold">研發經驗 (年)</div>
-            </div>
-            <div>
-              <div className="text-5xl font-extrabold mb-2 text-sky-500">200k</div>
-              <div className="text-slate-400 text-xs tracking-widest uppercase font-bold">信任客戶</div>
-            </div>
-            <div>
-              <div className="text-5xl font-extrabold mb-2 text-sky-500">98%</div>
-              <div className="text-slate-400 text-xs tracking-widest uppercase font-bold">滿意度</div>
-            </div>
-            <div>
-              <div className="text-5xl font-extrabold mb-2 text-sky-500">30+</div>
-              <div className="text-slate-400 text-xs tracking-widest uppercase font-bold">國際合規認證</div>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Trust Quote */}
-      <section className="py-32 bg-white">
-        <div className="max-w-3xl mx-auto px-4 text-center">
-          <div className="w-12 h-12 bg-sky-100 rounded-2xl flex items-center justify-center mx-auto mb-8">
-            <Heart className="w-6 h-6 text-sky-600" />
-          </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 leading-relaxed mb-8">
-            "用科學守護每一份心搏，為全球家庭提供最精準的健康防護規劃。"
-          </h2>
-          <p className="text-sky-600 font-bold tracking-[0.2em] uppercase text-sm">— 勝心康 生物科技 —</p>
-        </div>
-      </section>
     </div>
   );
 }
@@ -374,7 +348,7 @@ function AllProductsPage({ onSelectProduct }: { onSelectProduct: (p: Product) =>
          <h1 className="text-4xl font-extrabold mb-4 text-slate-900">所有產品方案</h1>
          <div className="w-16 h-1 bg-sky-600 mx-auto rounded-full" />
        </div>
-       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
          {PRODUCTS.map(p => (
            <div 
              key={p.id}
@@ -400,7 +374,8 @@ function AllProductsPage({ onSelectProduct }: { onSelectProduct: (p: Product) =>
 const productDescriptionsShort: Record<string, string> = {
   yufutong: "專業級血液循環優化，維護心血管彈性與通暢。",
   yuanhuayi: "全方位代謝健康守護，平衡生理機能。",
-  genetesting: "最前沿的個人化基因組分析，預測健康未來。"
+  genetesting: "勝心康經銷美國Myriad乳癌基因檢測EndoPredict，獲國際權威學會推薦認可。",
+  laser: "引進低能量紅色光能照射，促進血氧、活化細胞，重塑自癒力。"
 };
 
 function AboutPage() {
@@ -413,28 +388,11 @@ function AboutPage() {
         </div>
         <div className="prose prose-slate prose-lg max-w-none text-slate-600 space-y-12">
           <p className="leading-relaxed">
-            「勝心康」成立於 2012 年，是一個由全球頂尖醫學專家與生技博士共同組成的精準健康管理團隊。我們的核心價值在於「以科學為翼，成就極致健康」。
+            勝心康成立於2020年，致力於精準醫學與保健產品的經銷。我們的核心價值在於「以科學為翼，成就極致健康」。
           </p>
           <div className="h-[450px] rounded-[2.5rem] overflow-hidden my-16 shadow-2xl relative">
             <img src="https://picsum.photos/seed/lab/1200/800" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent" />
-          </div>
-          <h2 className="text-3xl font-extrabold text-slate-900 flex items-center gap-4">
-             <div className="w-1.5 h-8 bg-sky-500 rounded-full" />
-             我們的使命
-          </h2>
-          <p className="leading-relaxed">
-            在快速變遷的數位醫療時代，勝心康致力於將次世代基因定序技術與先進生物萃取物緊密結合，為全球家庭提供從數據分析到實質營養干預的一站式解決方案。
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 my-16">
-            <div className="p-10 bg-white shadow-sm border border-slate-100 rounded-[2rem] hover:shadow-xl transition-all">
-              <h3 className="text-xl font-bold text-sky-600 mb-4">世界級品質承諾</h3>
-              <p className="text-sm text-slate-500 leading-relaxed font-medium">我們堅持所有產品研發與檢測均通過最高等級國際認證，確保效能與純淨度達到業界頂尖標準。</p>
-            </div>
-            <div className="p-10 bg-slate-900 text-white rounded-[2.5rem] shadow-xl">
-              <h3 className="text-xl font-bold text-sky-400 mb-4 font-sans">極致精準服務</h3>
-              <p className="text-sm text-slate-400 leading-relaxed">我們深信「萬人萬方」。透過DNA密碼的深度解讀，我們為每一位獨特的生命個體提供最具效益的健康路徑。</p>
-            </div>
           </div>
         </div>
       </div>
